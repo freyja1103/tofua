@@ -123,6 +123,7 @@ OS のみ、Browser のみを取得する API を提供できること。
 
 #### 4.1.1 `parseUA`
 User-Agent を解析し、OS と Browser の両方を返す。
+入力は `string` を前提とし、型の正規化は行わない。空文字の場合は `Unknown` ベースの結果を返す。
 
 ```ts
 parseUA(userAgent: string): UAResult
@@ -144,6 +145,7 @@ getBrowser(userAgent: string): BrowserInfo
 
 #### 4.1.4 `safeParseUA`
 不正入力を含めた安全な解析用。`unknown` 系に正規化する。
+`null` / `undefined` は空文字へ正規化し、文字列入力は前後空白を除去してから解析する。
 
 ```ts
 safeParseUA(userAgent?: string | null): UAResult
@@ -188,6 +190,11 @@ export interface UAResult {
   raw: string;
 }
 ```
+
+`UAResult.raw` には、実際に解析に使用した文字列を格納する。
+
+- `parseUA` では入力文字列をそのまま返す
+- `safeParseUA` では `normalizeUA` 適用後の文字列を返す
 
 ---
 
@@ -299,6 +306,8 @@ interface OSRule {
 }
 ```
 
+`Unknown` は通常ルールとして持たず、どのルールにも一致しない場合の既定値として扱う。
+
 ---
 
 #### 6.2.2 優先順位
@@ -404,7 +413,21 @@ Browser 判定は誤判定防止のため、以下の順序で行う。
 
 ---
 
-#### 6.3.2 判定条件詳細
+#### 6.3.2 ルール定義イメージ
+
+```ts
+interface BrowserRule {
+  name: BrowserName;
+  test: (ua: string) => boolean;
+  version: (ua: string) => string | null;
+}
+```
+
+`Unknown` は通常ルールとして持たず、どのルールにも一致しない場合の既定値として扱う。
+
+---
+
+#### 6.3.3 判定条件詳細
 
 ##### Edge
 **判定条件**
@@ -446,6 +469,10 @@ Browser 判定は誤判定防止のため、以下の順序で行う。
 /Chrome\/(\d+(?:\.\d+)*)/
 ```
 
+**備考**
+- `Chromium/` のみを含む UA は Chrome とみなさず `Unknown` とする
+- 本パッケージでは `Chromium` は公開 `BrowserName` の対象外であるため、誤って `Chrome` に寄せないことを優先する
+
 ##### Safari
 **判定条件**
 - `Safari/`
@@ -456,6 +483,10 @@ Browser 判定は誤判定防止のため、以下の順序で行う。
 ```regex
 /Version\/(\d+(?:\.\d+)*)/
 ```
+
+**備考**
+- `Version/` を必須とし、曖昧な Safari 系 UA は `Unknown` を返す
+- 古い Safari 互換 UA を広く拾うよりも、Chrome 系誤判定を避けた安定動作を優先する
 
 ##### Firefox
 **判定条件**
@@ -477,8 +508,6 @@ Browser 判定は誤判定防止のため、以下の順序で行う。
   ↓
 入力 userAgent を受け取る
   ↓
-文字列正規化（trim）
-  ↓
 getOS() 呼び出し
   ↓
 getBrowser() 呼び出し
@@ -496,11 +525,7 @@ UAResult を組み立て
 ```text
 [開始]
   ↓
-入力が string か判定
-  ├─ No → 空文字として扱う
-  └─ Yes
-  ↓
-trim
+normalizeUA() を適用
   ↓
 getOS()
   ↓
@@ -527,6 +552,8 @@ function normalizeUA(input?: string | null): string
 **仕様**
 - `null` → `""`
 - `"  abc  "` → `"abc"`
+- `parseUA` では使用しない
+- `safeParseUA` のみで使用する
 
 ---
 
@@ -549,11 +576,17 @@ function extractVersion(ua: string, regex: RegExp): string | null
 ### 8.3 `matchFirstRule`
 
 ```ts
-function matchFirstRule<T>(ua: string, rules: Rule<T>[]): T
+interface Rule<T> {
+  test: (ua: string) => boolean;
+  resolve: (ua: string) => T;
+}
+
+function matchFirstRule<T>(ua: string, rules: Rule<T>[], fallback: T): T
 ```
 
 **役割**
 - ルール配列を先頭から評価し、最初に一致した結果を返す
+- 一致しない場合は `fallback` を返す
 
 ---
 
@@ -570,6 +603,10 @@ function matchFirstRule<T>(ua: string, rules: Rule<T>[]): T
 | `null` / `undefined` | safe API では Unknown を返す |
 | 未知の UA | Unknown を返す |
 | バージョン未抽出 | `version: null` |
+
+補足:
+- `parseUA("")` は `Unknown` ベースの結果を返す
+- `parseUA` は非文字列入力を受け取る API ではない
 
 ---
 
@@ -621,18 +658,44 @@ Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHT
 ```
 
 ##### Case-OS-04 Android
+入力:
+```text
+Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Mobile Safari/537.36
+```
+
 期待値:
 ```ts
 { name: "Android", version: "14" }
 ```
 
 ##### Case-OS-05 Linux
+入力:
+```text
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+```
+
 期待値:
 ```ts
 { name: "Linux", version: null }
 ```
 
-##### Case-OS-06 Unknown
+##### Case-OS-06 Chrome OS
+入力:
+```text
+Mozilla/5.0 (X11; CrOS x86_64 16093.68.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+```
+
+期待値:
+```ts
+{ name: "Chrome OS", version: "16093.68.0" }
+```
+
+##### Case-OS-07 Unknown
+入力:
+```text
+SomeCustomAgent/1.0
+```
+
 期待値:
 ```ts
 { name: "Unknown", version: null }
@@ -643,42 +706,88 @@ Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHT
 #### 10.2.2 Browser 判定テスト
 
 ##### Case-BR-01 Chrome
+入力:
+```text
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+```
+
 期待値:
 ```ts
 { name: "Chrome", version: "135.0.0.0" }
 ```
 
 ##### Case-BR-02 Edge
+入力:
+```text
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 Edg/135.0.3179.54
+```
+
 期待値:
 ```ts
 { name: "Edge", version: "135.0.3179.54" }
 ```
 
 ##### Case-BR-03 Safari
+入力:
+```text
+Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Mobile/15E148 Safari/604.1
+```
+
 期待値:
 ```ts
 { name: "Safari", version: "17.4" }
 ```
 
 ##### Case-BR-04 Firefox
+入力:
+```text
+Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0
+```
+
 期待値:
 ```ts
 { name: "Firefox", version: "137.0" }
 ```
 
 ##### Case-BR-05 Opera
+入力:
+```text
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/117.0.0.0
+```
+
 期待値:
 ```ts
 { name: "Opera", version: "117.0.0.0" }
 ```
 
 ##### Case-BR-06 Samsung Internet
+入力:
+```text
+Mozilla/5.0 (Linux; Android 14; SAMSUNG SM-S921B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/25.0 Chrome/135.0.0.0 Mobile Safari/537.36
+```
+
 期待値:
 ```ts
 { name: "Samsung Internet", version: "25.0" }
 ```
 
 ##### Case-BR-07 Unknown
+入力:
+```text
+SomeCustomAgent/1.0
+```
+
+期待値:
+```ts
+{ name: "Unknown", version: null }
+```
+
+##### Case-BR-08 Chromium-only UA
+入力:
+```text
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chromium/135.0.0.0 Safari/537.36
+```
+
 期待値:
 ```ts
 { name: "Unknown", version: null }
@@ -696,6 +805,44 @@ Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHT
 
 ##### Safari 系で Chrome を誤判定しない
 - `Safari/xxx` を含んでいても `Chrome/xxx` がある場合は Safari にしないこと
+
+##### Safari 系で Chromium を誤判定しない
+- `Safari/xxx` と `Chromium/xxx` がある場合は Safari にしないこと
+
+---
+
+#### 10.2.4 safe API テスト
+
+##### Case-SAFE-01 `undefined`
+- `safeParseUA(undefined)` は `raw: ""` と `Unknown` 結果を返すこと
+
+##### Case-SAFE-02 `null`
+- `safeParseUA(null)` は `raw: ""` と `Unknown` 結果を返すこと
+
+##### Case-SAFE-03 空文字
+- `safeParseUA("")` は `raw: ""` と `Unknown` 結果を返すこと
+
+##### Case-SAFE-04 前後空白付き文字列
+- `safeParseUA("  Mozilla/5.0 (...)  ")` は `raw` が trim 済みであること
+
+##### Case-SAFE-05 `parseUA("")`
+- `parseUA("")` は `raw: ""` と `Unknown` 結果を返すこと
+
+---
+
+#### 10.2.5 バージョン抽出ユーティリティテスト
+
+##### Case-VER-01 抽出成功
+- `/Chrome\/(\d+(?:\.\d+)*)/` から `135.0.0.0` を取得できること
+
+##### Case-VER-02 アンダースコア正規化
+- `/OS (\d+(?:[_\.]\d+)*)/` から `17_4` を受け取り `17.4` を返すこと
+
+##### Case-VER-03 マッチなし
+- 対象文字列に一致しない場合は `null` を返すこと
+
+##### Case-VER-04 空キャプチャ防止
+- 空文字キャプチャや不正な値は `null` を返すこと
 
 ---
 
@@ -747,7 +894,7 @@ Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHT
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "build": "tsup src/index.ts --format esm,cjs --dts --sourcemap",
     "test": "vitest run",
     "dev": "vitest",
     "lint": "eslint .",
@@ -770,6 +917,8 @@ Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHT
 ## 13. 将来拡張方針
 
 ### 13.1 拡張候補
+以下はいずれも**現時点ではスコープ外**であり、本設計の初期実装には含めない。
+
 - `getDevice()` の追加
 - `isBot()` の追加
 - `engine` 判定追加
@@ -803,6 +952,7 @@ Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHT
 // src/parse.ts
 import { getOS } from "./os";
 import { getBrowser } from "./browser";
+import { normalizeUA } from "./utils/normalize";
 import type { UAResult } from "./types";
 
 export function parseUA(userAgent: string): UAResult {
@@ -814,7 +964,7 @@ export function parseUA(userAgent: string): UAResult {
 }
 
 export function safeParseUA(userAgent?: string | null): UAResult {
-  const raw = typeof userAgent === "string" ? userAgent.trim() : "";
+  const raw = normalizeUA(userAgent);
   return {
     os: getOS(raw),
     browser: getBrowser(raw),
