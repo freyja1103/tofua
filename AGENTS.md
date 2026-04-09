@@ -69,6 +69,7 @@ Unless explicitly requested otherwise, preserve these principles:
 ## Detection Priorities
 
 ### OS
+
 Apply OS rules in a deliberate order to avoid false positives. A typical order is:
 
 1. iOS
@@ -80,6 +81,7 @@ Apply OS rules in a deliberate order to avoid false positives. A typical order i
 7. Unknown
 
 ### Browser
+
 Apply browser rules in a deliberate order to avoid Chromium-family misclassification. A typical order is:
 
 1. Edge
