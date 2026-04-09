@@ -53,6 +53,7 @@ If the actual repository layout differs, prefer the existing layout over this re
 Unless explicitly requested otherwise, preserve these principles:
 
 - `parseUA(userAgent: string)` returns both OS and Browser results
+- `getUA()` returns the parsed current-environment User-Agent when available
 - `getOS(userAgent: string)` returns only OS info
 - `getBrowser(userAgent: string)` returns only Browser info
 - safe parsing APIs should normalize invalid input and return `Unknown` results instead of throwing
