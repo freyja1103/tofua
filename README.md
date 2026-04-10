@@ -166,7 +166,6 @@ Supported OS names:
 - `Windows`
 - `macOS`
 - `Linux`
-- `Unknown`
 
 ### Browser
 
@@ -178,7 +177,6 @@ Supported browser names:
 - `Chrome`
 - `Safari`
 - `Firefox`
-- `Unknown`
 
 Rule order matters. For example:
 
