@@ -1,13 +1,13 @@
 # AGENTS.md
 
-This repository contains **magicua**, a tiny TypeScript library for parsing User-Agent strings and extracting **OS** and **Browser** information.
+This repository contains **tofua**, a tiny TypeScript library for parsing User-Agent strings and extracting **OS** and **Browser** information.
 
 Before making changes, review the existing source, tests, configuration, and public API surface. Match the established style and keep the package small, predictable, and easy to maintain.
 
 ## Core Mandates
 
 - **Conventions:** Follow existing project conventions exactly. Read surrounding code, tests, and build config before changing anything.
-- **Minimal Scope:** `magicua` is intentionally small. Do not expand scope beyond OS and Browser parsing unless explicitly requested.
+- **Minimal Scope:** `tofua` is intentionally small. Do not expand scope beyond OS and Browser parsing unless explicitly requested.
 - **Dependencies:** Prefer **zero runtime dependencies**. Do not introduce third-party libraries unless explicitly requested.
 - **API Stability:** Preserve the public API shape unless the task explicitly requires a breaking change.
 - **Type Safety:** Keep TypeScript types explicit, narrow, and ergonomic for consumers.
@@ -24,7 +24,7 @@ Before making changes, review the existing source, tests, configuration, and pub
 
 ## Project Goals
 
-`magicua` should remain:
+`tofua` should remain:
 
 - **Tiny**: small surface area, small bundle impact
 - **Fast**: simple rule-based matching with low overhead

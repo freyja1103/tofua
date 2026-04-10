@@ -2,7 +2,7 @@
 
 ## 1. 文書情報
 
-- 文書名: `magicua` 詳細設計書
+- 文書名: `tofua` 詳細設計書
 - 対象: npm パッケージ / TypeScript ライブラリ
 - 目的: User-Agent 文字列から OS と Browser を判定し、構造化された情報を返却する
 - 想定利用者:
@@ -22,7 +22,7 @@
 - パッケージサイズが大きい場合がある
 - API が広く、軽量用途には扱いづらい
 
-`magicua` は、**OS と Browser の取得に特化したシンプルかつ軽量なライブラリ**を目指す。
+`tofua` は、**OS と Browser の取得に特化したシンプルかつ軽量なライブラリ**を目指す。
 
 ### 2.2 目的
 
@@ -233,7 +233,7 @@ export interface UAResult {
 ### 4.3 使用例
 
 ```ts
-import { getUA, parseUA, getOS, getBrowser } from "magicua";
+import { getUA, parseUA, getOS, getBrowser } from "tofua";
 
 const ua =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36";
@@ -1033,7 +1033,7 @@ Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chromium/
 
 ```json
 {
-  "name": "magicua",
+  "name": "tofua",
   "version": "0.1.0",
   "description": "A tiny User-Agent parser for OS and browser detection.",
   "type": "module",
@@ -1171,8 +1171,8 @@ export function extractVersion(ua: string, regex: RegExp): string | null {
 
 ## 17. README 冒頭用の短い説明案
 
-> `magicua` is a tiny and fast User-Agent parser for OS and browser detection.
+> `tofua` is a tiny and fast User-Agent parser for OS and browser detection.
 
 日本語案:
 
-> `magicua` は、User-Agent 文字列から OS と Browser を軽量に判定するための TypeScript 向けパッケージです。
+> `tofua` は、User-Agent 文字列から OS と Browser を軽量に判定するための TypeScript 向けパッケージです。
