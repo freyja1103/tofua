@@ -1,8 +1,8 @@
-# magicua
+# tofua
 
 A tiny User-Agent parser for OS and browser detection.
 
-`magicua` focuses on a very small surface area:
+`tofua` focuses on a very small surface area:
 
 - OS detection
 - browser detection
@@ -14,13 +14,13 @@ It does not try to do device detection, bot detection, engine detection, or Clie
 ## Installation
 
 ```bash
-pnpm add magicua
+pnpm add tofua
 ```
 
 ## Quick Start
 
 ```ts
-import { getUA, parseUA } from "magicua";
+import { getUA, parseUA } from "tofua";
 
 const userAgent =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36";
@@ -43,7 +43,7 @@ console.log(result);
 Parses a User-Agent string and returns both OS and browser information.
 
 ```ts
-import { parseUA } from "magicua";
+import { parseUA } from "tofua";
 
 const result = parseUA(
   "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Mobile/15E148 Safari/604.1",
@@ -67,7 +67,7 @@ Defensive version of `parseUA`.
 - malformed or unknown input returns `Unknown`
 
 ```ts
-import { safeParseUA } from "magicua";
+import { safeParseUA } from "tofua";
 
 safeParseUA(undefined);
 // {
@@ -85,7 +85,7 @@ In browser environments, this is effectively a wrapper around `parseUA(navigator
 If `navigator.userAgent` is unavailable, it returns an `Unknown` result with `raw: ""`.
 
 ```ts
-import { getUA } from "magicua";
+import { getUA } from "tofua";
 
 const current = getUA();
 ```
@@ -95,7 +95,7 @@ const current = getUA();
 Returns only the OS result.
 
 ```ts
-import { getOS } from "magicua";
+import { getOS } from "tofua";
 
 getOS(
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_5_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15",
@@ -108,7 +108,7 @@ getOS(
 Returns only the browser result.
 
 ```ts
-import { getBrowser } from "magicua";
+import { getBrowser } from "tofua";
 
 getBrowser(
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 Edg/135.0.3179.54",
@@ -190,7 +190,7 @@ Rule order matters. For example:
 
 ## Notes
 
-- When detection is inconclusive, `magicua` returns `Unknown` instead of guessing.
+- When detection is inconclusive, `tofua` returns `Unknown` instead of guessing.
 - Some platforms do not expose a reliable OS version. For example, Linux returns `version: null`.
 - Windows returns the raw `Windows NT` version value.
 - User-Agent parsing is inherently imperfect and modern browsers continue to reduce UA detail.
