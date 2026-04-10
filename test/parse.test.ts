@@ -1,6 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { parseUA, safeParseUA } from "../src/parse";
+import { getUA, parseUA, safeParseUA } from "../src/parse";
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 describe("parseUA", () => {
   it("returns both OS and browser info", () => {
@@ -61,6 +65,37 @@ describe("safeParseUA", () => {
   it("handles non-string runtime input defensively", () => {
     // This mirrors callers that bypass TypeScript and hand us invalid runtime values.
     expect(safeParseUA(123 as unknown as string)).toEqual({
+      os: { name: "Unknown", version: null },
+      browser: { name: "Unknown", version: null },
+      raw: "",
+    });
+  });
+});
+
+describe("getUA", () => {
+  it("wraps navigator.userAgent with parseUA", () => {
+    const userAgent =
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36";
+
+    vi.stubGlobal("navigator", { userAgent });
+
+    expect(getUA()).toEqual(parseUA(userAgent));
+  });
+
+  it("returns Unknown when navigator is absent", () => {
+    vi.stubGlobal("navigator", undefined);
+
+    expect(getUA()).toEqual({
+      os: { name: "Unknown", version: null },
+      browser: { name: "Unknown", version: null },
+      raw: "",
+    });
+  });
+
+  it("returns Unknown when navigator.userAgent is unavailable", () => {
+    vi.stubGlobal("navigator", {});
+
+    expect(getUA()).toEqual({
       os: { name: "Unknown", version: null },
       browser: { name: "Unknown", version: null },
       raw: "",

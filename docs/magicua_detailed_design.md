@@ -164,7 +164,16 @@ User-Agent から Browser のみ返す。
 getBrowser(userAgent: string): BrowserInfo
 ```
 
-#### 4.1.4 `safeParseUA`
+#### 4.1.4 `getUA`
+
+実行環境の `navigator.userAgent` を解析し、OS と Browser の両方を返す。
+`navigator.userAgent` が利用できない環境では `Unknown` ベースの結果を返す。
+
+```ts
+getUA(): UAResult
+```
+
+#### 4.1.5 `safeParseUA`
 
 不正入力を含めた安全な解析用。`unknown` 系に正規化する。
 `null` / `undefined` は空文字へ正規化し、文字列入力は前後空白を除去してから解析する。
@@ -216,6 +225,7 @@ export interface UAResult {
 `UAResult.raw` には、実際に解析に使用した文字列を格納する。
 
 - `parseUA` では入力文字列をそのまま返す
+- `getUA` では `navigator.userAgent` または `""` を返す
 - `safeParseUA` では `normalizeUA` 適用後の文字列を返す
 
 ---
@@ -223,7 +233,7 @@ export interface UAResult {
 ### 4.3 使用例
 
 ```ts
-import { parseUA, getOS, getBrowser } from "magicua";
+import { getUA, parseUA, getOS, getBrowser } from "magicua";
 
 const ua =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36";
@@ -236,6 +246,8 @@ const result = parseUA(ua);
   raw: "..."
 }
 */
+
+const current = getUA();
 
 const os = getOS(ua);
 // { name: "Windows", version: "10.0" }
@@ -275,7 +287,7 @@ src/
 
 #### `parse.ts`
 
-- `parseUA`, `safeParseUA` を実装
+- `parseUA`, `getUA`, `safeParseUA` を実装
 - `getOS`, `getBrowser` を組み合わせて結果を生成
 
 #### `os.ts`
@@ -1113,6 +1125,16 @@ export function parseUA(userAgent: string): UAResult {
   };
 }
 
+export function getUA(): UAResult {
+  const runtimeGlobal = globalThis as { navigator?: { userAgent?: string } };
+  const userAgent =
+    typeof runtimeGlobal.navigator?.userAgent === "string"
+      ? runtimeGlobal.navigator.userAgent
+      : "";
+
+  return parseUA(userAgent);
+}
+
 export function safeParseUA(userAgent?: string | null): UAResult {
   const raw = normalizeUA(userAgent);
   return {
@@ -1138,7 +1160,7 @@ export function extractVersion(ua: string, regex: RegExp): string | null {
 
 以下を満たした場合、本設計の実装完了とみなす。
 
-1. `parseUA`, `getOS`, `getBrowser`, `safeParseUA` が提供されている
+1. `parseUA`, `getUA`, `getOS`, `getBrowser`, `safeParseUA` が提供されている
 2. 定義済み OS / Browser を判定できる
 3. 主要ブラウザの優先順位誤判定テストが通る
 4. TypeScript 型定義が生成される

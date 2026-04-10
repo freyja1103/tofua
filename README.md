@@ -20,12 +20,13 @@ pnpm add magicua
 ## Quick Start
 
 ```ts
-import { parseUA } from "magicua";
+import { getUA, parseUA } from "magicua";
 
 const userAgent =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36";
 
 const result = parseUA(userAgent);
+const current = getUA();
 
 console.log(result);
 // {
@@ -74,6 +75,19 @@ safeParseUA(undefined);
 //   browser: { name: "Unknown", version: null },
 //   raw: ""
 // }
+```
+
+### `getUA(): UAResult`
+
+Parses `navigator.userAgent` and returns the same shape as `parseUA`.
+
+In browser environments, this is effectively a wrapper around `parseUA(navigator.userAgent)`.
+If `navigator.userAgent` is unavailable, it returns an `Unknown` result with `raw: ""`.
+
+```ts
+import { getUA } from "magicua";
+
+const current = getUA();
 ```
 
 ### `getOS(userAgent: string): OSInfo`

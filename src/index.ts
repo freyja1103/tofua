@@ -1,6 +1,6 @@
 export { getBrowser } from "./browser";
 export { getOS } from "./os";
-export { parseUA, safeParseUA } from "./parse";
+export { getUA, parseUA, safeParseUA } from "./parse";
 export type {
   BrowserInfo,
   BrowserName,
