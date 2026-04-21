@@ -46,6 +46,13 @@ describe("getOS", () => {
     expect(getOS(userAgent)).toEqual({ name: "iOS", version: "17.4" });
   });
 
+  it("extracts iOS version from legacy iPad Mac OS X markers", () => {
+    const userAgent =
+      "Mozilla/5.0 (iPad; CPU Mac OS X 13_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.4 Mobile/15E148 Safari/604.1";
+
+    expect(getOS(userAgent)).toEqual({ name: "iOS", version: "13.4" });
+  });
+
   it("prefers Chrome OS over Linux", () => {
     const userAgent =
       "Mozilla/5.0 (X11; CrOS x86_64 16093.68.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36";
