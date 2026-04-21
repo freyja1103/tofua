@@ -18,6 +18,49 @@ describe("parseUA", () => {
     });
   });
 
+  it.each([
+    [
+      "Oculus Browser on Linux",
+      "Mozilla/5.0 (X11; Linux x86_64; Quest 2) AppleWebKit/537.36 (KHTML, like Gecko) OculusBrowser/30.0.0.4.87.517018317 Chrome/112.0.5615.136 VR Safari/537.36",
+      {
+        os: { name: "Linux", version: null },
+        browser: {
+          name: "Oculus Browser",
+          version: "30.0.0.4.87.517018317",
+        },
+      },
+    ],
+    [
+      "Android WebView on Android",
+      "Mozilla/5.0 (Linux; Android 14; Pixel 8 Build/UP1A.231005.007; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/135.0.0.0 Mobile Safari/537.36",
+      {
+        os: { name: "Android", version: "14" },
+        browser: { name: "Android WebView", version: "135.0.0.0" },
+      },
+    ],
+    [
+      "iOS WebView on iOS",
+      "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148",
+      {
+        os: { name: "iOS", version: "17.4" },
+        browser: { name: "iOS WebView", version: null },
+      },
+    ],
+    [
+      "Internet Explorer on Windows",
+      "Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko",
+      {
+        os: { name: "Windows", version: "6.1" },
+        browser: { name: "Internet Explorer", version: "11.0" },
+      },
+    ],
+  ])("returns OS and browser info for %s", (_label, userAgent, expected) => {
+    expect(parseUA(userAgent)).toEqual({
+      ...expected,
+      raw: userAgent,
+    });
+  });
+
   it("returns Unknown for an empty string", () => {
     expect(parseUA("")).toEqual({
       os: { name: "Unknown", version: null },

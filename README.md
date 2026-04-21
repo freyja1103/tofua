@@ -135,6 +135,10 @@ type BrowserName =
   | "Firefox"
   | "Opera"
   | "Samsung Internet"
+  | "Android WebView"
+  | "iOS WebView"
+  | "Internet Explorer"
+  | "Oculus Browser"
   | "Unknown";
 
 interface OSInfo {
@@ -173,16 +177,22 @@ Supported browser names:
 
 - `Edge`
 - `Opera`
+- `Oculus Browser`
 - `Samsung Internet`
+- `Android WebView`
 - `Chrome`
 - `Safari`
+- `iOS WebView`
 - `Firefox`
+- `Internet Explorer`
 
 Rule order matters. For example:
 
 - Edge wins over Chrome
 - Opera wins over Chrome
+- Oculus Browser wins over Chrome
 - Samsung Internet wins over Chrome
+- Android WebView wins over Chrome
 - Safari requires `Safari/` and `Version/`
 - `Chromium/`-only User-Agent strings return `Unknown`
 
