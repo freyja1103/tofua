@@ -45,7 +45,7 @@ export const browserRules: readonly BrowserRule[] = [
   {
     name: "Chrome",
     test: (ua) =>
-      ua.includes("Chrome/") &&
+      (ua.includes("Chrome/") || ua.includes("CriOS/")) &&
       excludes(ua, [
         "Edg/",
         "OPR/",
@@ -53,7 +53,9 @@ export const browserRules: readonly BrowserRule[] = [
         "OculusBrowser/",
         "; wv",
       ]),
-    version: (ua) => extractVersion(ua, /Chrome\/(\d+(?:\.\d+)*)/),
+    version: (ua) =>
+      extractVersion(ua, /Chrome\/(\d+(?:\.\d+)*)/) ??
+      extractVersion(ua, /CriOS\/(\d+(?:\.\d+)*)/),
   },
   {
     name: "Safari",
