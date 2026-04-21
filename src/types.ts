@@ -14,6 +14,10 @@ export type BrowserName =
   | "Firefox"
   | "Opera"
   | "Samsung Internet"
+  | "Android WebView"
+  | "iOS WebView"
+  | "Internet Explorer"
+  | "Oculus Browser"
   | "Unknown";
 
 export interface OSInfo {

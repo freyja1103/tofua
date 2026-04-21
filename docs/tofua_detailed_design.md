@@ -84,6 +84,10 @@
 - Firefox
 - Opera
 - Samsung Internet
+- Android WebView
+- iOS WebView
+- Internet Explorer
+- Oculus Browser
 - Unknown
 
 #### FR-04: バージョン抽出
@@ -203,6 +207,10 @@ export type BrowserName =
   | "Firefox"
   | "Opera"
   | "Samsung Internet"
+  | "Android WebView"
+  | "iOS WebView"
+  | "Internet Explorer"
+  | "Oculus Browser"
   | "Unknown";
 
 export interface OSInfo {
@@ -474,11 +482,15 @@ Browser 判定は誤判定防止のため、以下の順序で行う。
 
 1. Edge
 2. Opera
-3. Samsung Internet
-4. Chrome
-5. Safari
-6. Firefox
-7. Unknown
+3. Oculus Browser
+4. Samsung Internet
+5. Android WebView
+6. Chrome
+7. Safari
+8. iOS WebView
+9. Firefox
+10. Internet Explorer
+11. Unknown
 
 ---
 
@@ -534,6 +546,31 @@ interface BrowserRule {
 /SamsungBrowser\/(\d+(?:\.\d+)*)/
 ```
 
+##### Oculus Browser
+
+**判定条件**
+
+- `OculusBrowser/`
+
+**バージョン抽出**
+
+```regex
+/OculusBrowser\/(\d+(?:\.\d+)*)/
+```
+
+##### Android WebView
+
+**判定条件**
+
+- `; wv`
+- `Chrome/`
+
+**バージョン抽出**
+
+```regex
+/Chrome\/(\d+(?:\.\d+)*)/
+```
+
 ##### Chrome
 
 **判定条件**
@@ -543,6 +580,8 @@ interface BrowserRule {
   - `Edg/`
   - `OPR/`
   - `SamsungBrowser/`
+  - `OculusBrowser/`
+  - `; wv`
 
 **バージョン抽出**
 
@@ -574,6 +613,19 @@ interface BrowserRule {
 - `Version/` を必須とし、曖昧な Safari 系 UA は `Unknown` を返す
 - 古い Safari 互換 UA を広く拾うよりも、Chrome 系誤判定を避けた安定動作を優先する
 
+##### iOS WebView
+
+**判定条件**
+
+- `AppleWebKit/`
+- `Mobile/`
+- `Safari/` を含まない
+- `iPhone`, `iPad`, `iPod` のいずれかを含む
+
+**バージョン抽出**
+
+- UA から信頼できる WebView バージョンを抽出できないため `null`
+
 ##### Firefox
 
 **判定条件**
@@ -584,6 +636,20 @@ interface BrowserRule {
 
 ```regex
 /Firefox\/(\d+(?:\.\d+)*)/
+```
+
+##### Internet Explorer
+
+**判定条件**
+
+- `MSIE `
+- または `Trident/`
+
+**バージョン抽出**
+
+```regex
+/MSIE (\d+(?:\.\d+)*)/
+/rv:(\d+(?:\.\d+)*)/
 ```
 
 ---

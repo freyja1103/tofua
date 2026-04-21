@@ -28,15 +28,31 @@ export const browserRules: readonly BrowserRule[] = [
     version: (ua) => extractVersion(ua, /OPR\/(\d+(?:\.\d+)*)/),
   },
   {
+    name: "Oculus Browser",
+    test: (ua) => ua.includes("OculusBrowser/"),
+    version: (ua) => extractVersion(ua, /OculusBrowser\/(\d+(?:\.\d+)*)/),
+  },
+  {
     name: "Samsung Internet",
     test: (ua) => ua.includes("SamsungBrowser/"),
     version: (ua) => extractVersion(ua, /SamsungBrowser\/(\d+(?:\.\d+)*)/),
   },
   {
+    name: "Android WebView",
+    test: (ua) => ua.includes("; wv") && ua.includes("Chrome/"),
+    version: (ua) => extractVersion(ua, /Chrome\/(\d+(?:\.\d+)*)/),
+  },
+  {
     name: "Chrome",
     test: (ua) =>
       ua.includes("Chrome/") &&
-      excludes(ua, ["Edg/", "OPR/", "SamsungBrowser/"]),
+      excludes(ua, [
+        "Edg/",
+        "OPR/",
+        "SamsungBrowser/",
+        "OculusBrowser/",
+        "; wv",
+      ]),
     version: (ua) => extractVersion(ua, /Chrome\/(\d+(?:\.\d+)*)/),
   },
   {
@@ -48,8 +64,24 @@ export const browserRules: readonly BrowserRule[] = [
     version: (ua) => extractVersion(ua, /Version\/(\d+(?:\.\d+)*)/),
   },
   {
+    name: "iOS WebView",
+    test: (ua) =>
+      ua.includes("AppleWebKit/") &&
+      ua.includes("Mobile/") &&
+      !ua.includes("Safari/") &&
+      (ua.includes("iPhone") || ua.includes("iPad") || ua.includes("iPod")),
+    version: () => null,
+  },
+  {
     name: "Firefox",
     test: (ua) => ua.includes("Firefox/"),
     version: (ua) => extractVersion(ua, /Firefox\/(\d+(?:\.\d+)*)/),
+  },
+  {
+    name: "Internet Explorer",
+    test: (ua) => ua.includes("MSIE ") || ua.includes("Trident/"),
+    version: (ua) =>
+      extractVersion(ua, /MSIE (\d+(?:\.\d+)*)/) ??
+      extractVersion(ua, /rv:(\d+(?:\.\d+)*)/),
   },
 ];
