@@ -10,6 +10,11 @@ describe("getBrowser", () => {
       { name: "Chrome", version: "135.0.0.0" },
     ],
     [
+      "Chrome on iOS",
+      "Mozilla/5.0 (iPhone; CPU iPhone OS 26_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/144.0.7559.95 Mobile/15E148 Safari/604.1",
+      { name: "Chrome", version: "144.0.7559.95" },
+    ],
+    [
       "Edge",
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 Edg/135.0.3179.54",
       { name: "Edge", version: "135.0.3179.54" },

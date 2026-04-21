@@ -20,6 +20,14 @@ describe("parseUA", () => {
 
   it.each([
     [
+      "Chrome on iOS",
+      "Mozilla/5.0 (iPhone; CPU iPhone OS 26_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/144.0.7559.95 Mobile/15E148 Safari/604.1",
+      {
+        os: { name: "iOS", version: "26.3.1" },
+        browser: { name: "Chrome", version: "144.0.7559.95" },
+      },
+    ],
+    [
       "Oculus Browser on Linux",
       "Mozilla/5.0 (X11; Linux x86_64; Quest 2) AppleWebKit/537.36 (KHTML, like Gecko) OculusBrowser/30.0.0.4.87.517018317 Chrome/112.0.5615.136 VR Safari/537.36",
       {
