@@ -22,7 +22,9 @@ export const osRules: readonly OSRule[] = [
   {
     name: "iOS",
     test: (ua) => hasAnyToken(ua, IOS_DEVICE_TOKENS),
-    version: (ua) => extractVersion(ua, /OS (\d+(?:[_.]\d+)*)/),
+    version: (ua) =>
+      extractVersion(ua, /OS (\d+(?:[_.]\d+)*)/) ??
+      extractVersion(ua, /Mac OS X (\d+(?:[_.]\d+)*)/),
   },
   {
     name: "Android",
