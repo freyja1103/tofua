@@ -17,6 +17,10 @@
       "require": "./dist/index.cjs"
     }
   },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --sourcemap && tsc -p tsconfig.build.json",
     "lint": "oxlint src test",
