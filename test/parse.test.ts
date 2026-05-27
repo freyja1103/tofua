@@ -21,29 +21,29 @@ describe("parseUA", () => {
   it.each([
     [
       "Chrome on iOS",
-      "Mozilla/5.0 (iPhone; CPU iPhone OS 26_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/144.0.7559.95 Mobile/15E148 Safari/604.1",
+      "Mozilla/5.0 (iPhone; CPU iPhone OS 26_4_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/148.0.7778.100 Mobile/15E148 Safari/604.1",
       {
-        os: { name: "iOS", version: "26.3.1" },
-        browser: { name: "Chrome", version: "144.0.7559.95" },
+        os: { name: "iOS", version: "26.4.2" },
+        browser: { name: "Chrome", version: "148.0.7778.100" },
       },
     ],
     [
       "Oculus Browser on Linux",
-      "Mozilla/5.0 (X11; Linux x86_64; Quest 2) AppleWebKit/537.36 (KHTML, like Gecko) OculusBrowser/30.0.0.4.87.517018317 Chrome/112.0.5615.136 VR Safari/537.36",
+      "Mozilla/5.0 (X11; Linux x86_64; Quest 3) AppleWebKit/537.36 (KHTML, like Gecko) OculusBrowser/42.0.0.0 Chrome/136.0.0.0 VR Safari/537.36",
       {
         os: { name: "Linux", version: null },
         browser: {
           name: "Oculus Browser",
-          version: "30.0.0.4.87.517018317",
+          version: "42.0.0.0",
         },
       },
     ],
     [
       "Android WebView on Android",
-      "Mozilla/5.0 (Linux; Android 14; Pixel 8 Build/UP1A.231005.007; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/135.0.0.0 Mobile Safari/537.36",
+      "Mozilla/5.0 (Linux; Android 10; K; wv) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Mobile Version/4.0 Mobile Safari/537.36",
       {
-        os: { name: "Android", version: "14" },
-        browser: { name: "Android WebView", version: "135.0.0.0" },
+        os: { name: "Android", version: "10" },
+        browser: { name: "Android WebView", version: "127.0.0.0" },
       },
     ],
     [
