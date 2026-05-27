@@ -13,6 +13,18 @@ function hasAnyToken(ua: string, tokens: readonly string[]): boolean {
   return tokens.some((token) => ua.includes(token));
 }
 
+function getIOSVersion(ua: string): string | null {
+  const safariVersion = extractVersion(ua, /Version\/(\d+(?:\.\d+)*)/);
+  if (ua.includes("Safari/") && safariVersion !== null) {
+    return safariVersion;
+  }
+
+  return (
+    extractVersion(ua, /OS (\d+(?:[_.]\d+)*)/) ??
+    extractVersion(ua, /Mac OS X (\d+(?:[_.]\d+)*)/)
+  );
+}
+
 export const UNKNOWN_OS: OSInfo = {
   name: "Unknown",
   version: null,
@@ -22,9 +34,7 @@ export const osRules: readonly OSRule[] = [
   {
     name: "iOS",
     test: (ua) => hasAnyToken(ua, IOS_DEVICE_TOKENS),
-    version: (ua) =>
-      extractVersion(ua, /OS (\d+(?:[_.]\d+)*)/) ??
-      extractVersion(ua, /Mac OS X (\d+(?:[_.]\d+)*)/),
+    version: getIOSVersion,
   },
   {
     name: "Android",

@@ -54,6 +54,14 @@ describe("parseUA", () => {
         browser: { name: "iOS WebView", version: null },
       },
     ],
+    [
+      "iOS 26 Safari",
+      "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Mobile/15E148 Safari/604.1",
+      {
+        os: { name: "iOS", version: "26.4" },
+        browser: { name: "Safari", version: "26.4" },
+      },
+    ],
   ])("returns OS and browser info for %s", (_label, userAgent, expected) => {
     expect(parseUA(userAgent)).toEqual({
       ...expected,
