@@ -54,14 +54,6 @@ describe("parseUA", () => {
         browser: { name: "iOS WebView", version: null },
       },
     ],
-    [
-      "Internet Explorer on Windows",
-      "Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko",
-      {
-        os: { name: "Windows", version: "6.1" },
-        browser: { name: "Internet Explorer", version: "11.0" },
-      },
-    ],
   ])("returns OS and browser info for %s", (_label, userAgent, expected) => {
     expect(parseUA(userAgent)).toEqual({
       ...expected,

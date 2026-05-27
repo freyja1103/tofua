@@ -137,7 +137,6 @@ type BrowserName =
   | "Samsung Internet"
   | "Android WebView"
   | "iOS WebView"
-  | "Internet Explorer"
   | "Oculus Browser"
   | "Unknown";
 
@@ -184,7 +183,6 @@ Supported browser names:
 - `Safari`
 - `iOS WebView`
 - `Firefox`
-- `Internet Explorer`
 
 Rule order matters. For example:
 

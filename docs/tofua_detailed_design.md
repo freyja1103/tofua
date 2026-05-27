@@ -86,7 +86,6 @@
 - Samsung Internet
 - Android WebView
 - iOS WebView
-- Internet Explorer
 - Oculus Browser
 - Unknown
 
@@ -209,7 +208,6 @@ export type BrowserName =
   | "Samsung Internet"
   | "Android WebView"
   | "iOS WebView"
-  | "Internet Explorer"
   | "Oculus Browser"
   | "Unknown";
 
@@ -489,8 +487,7 @@ Browser 判定は誤判定防止のため、以下の順序で行う。
 7. Safari
 8. iOS WebView
 9. Firefox
-10. Internet Explorer
-11. Unknown
+10. Unknown
 
 ---
 
@@ -637,22 +634,6 @@ interface BrowserRule {
 ```regex
 /Firefox\/(\d+(?:\.\d+)*)/
 ```
-
-##### Internet Explorer
-
-**判定条件**
-
-- `MSIE `
-- または `Trident/`
-
-**バージョン抽出**
-
-```regex
-/MSIE (\d+(?:\.\d+)*)/
-/rv:(\d+(?:\.\d+)*)/
-```
-
----
 
 ## 7. 主要処理フロー
 

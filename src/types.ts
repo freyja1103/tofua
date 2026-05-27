@@ -16,7 +16,6 @@ export type BrowserName =
   | "Samsung Internet"
   | "Android WebView"
   | "iOS WebView"
-  | "Internet Explorer"
   | "Oculus Browser"
   | "Unknown";
 
