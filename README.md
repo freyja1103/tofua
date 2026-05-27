@@ -192,7 +192,6 @@ Rule order matters. For example:
 - Samsung Internet wins over Chrome
 - Android WebView wins over Chrome
 - Safari requires `Safari/` and `Version/`
-- `Chromium/`-only User-Agent strings return `Unknown`
 
 ## Notes
 

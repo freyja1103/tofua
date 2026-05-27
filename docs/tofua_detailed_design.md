@@ -968,20 +968,6 @@ SomeCustomAgent/1.0
 { name: "Unknown", version: null }
 ```
 
-##### Case-BR-08 Chromium-only UA
-
-入力:
-
-```text
-Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chromium/135.0.0.0 Safari/537.36
-```
-
-期待値:
-
-```ts
-{ name: "Unknown", version: null }
-```
-
 ---
 
 #### 10.2.3 競合判定テスト
