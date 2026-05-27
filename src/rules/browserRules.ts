@@ -79,11 +79,4 @@ export const browserRules: readonly BrowserRule[] = [
     test: (ua) => ua.includes("Firefox/"),
     version: (ua) => extractVersion(ua, /Firefox\/(\d+(?:\.\d+)*)/),
   },
-  {
-    name: "Internet Explorer",
-    test: (ua) => ua.includes("MSIE ") || ua.includes("Trident/"),
-    version: (ua) =>
-      extractVersion(ua, /MSIE (\d+(?:\.\d+)*)/) ??
-      extractVersion(ua, /rv:(\d+(?:\.\d+)*)/),
-  },
 ];

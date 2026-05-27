@@ -54,16 +54,6 @@ describe("getBrowser", () => {
       "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148",
       { name: "iOS WebView", version: null },
     ],
-    [
-      "Internet Explorer",
-      "Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko",
-      { name: "Internet Explorer", version: "11.0" },
-    ],
-    [
-      "Internet Explorer with MSIE token",
-      "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)",
-      { name: "Internet Explorer", version: "9.0" },
-    ],
     ["Unknown", "SomeCustomAgent/1.0", { name: "Unknown", version: null }],
     [
       "Chromium-only",
